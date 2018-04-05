@@ -4,10 +4,7 @@
     <div class="collapse navbar-collapse">
         <ul class="navbar-nav mr-auto">
             <li class="nav-item">
-                <a class="nav-link" href="{{ url('/') }}">Home</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="{{ url('/dashboard') }}">Dashboard</a>
+                <a class="nav-link" href="{{ url('/') }}">Dashboard</a>
             </li>
         </ul>
     </div>

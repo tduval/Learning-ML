@@ -1,6 +1,6 @@
 <div class="sidebar bg-dark">
     <ul class="list-unstyled">
-        <li><a href="#"><i class="fas fa-fw fa-file-code"></i> Data</a></li>
+        <li><a href="{{ url('/data') }}"><i class="fas fa-fw fa-file-code"></i> Data</a></li>
         <li>
             <a href="#submenu1" data-toggle="collapse"><i class="fas fa-fw fa-chart-line"></i> Regression</a>
             <ul id="submenu1" class="list-unstyled collapse">

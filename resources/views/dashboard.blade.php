@@ -1,8 +1,7 @@
 @extends('layouts.default')
 
-@section('title', 'Page Title')
-@section('logo', 'PHP-ML Dashboard')
+@section('title', 'Dashboard')
 
 @section('content')
     i am the Dashboard page
-@endsection
+@stop
