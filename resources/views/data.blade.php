@@ -15,6 +15,7 @@
             Datasets
             </div>
             <div class="card-body">
+                @if ($files->count())
                 <div class="table-responsive">
                     <table class="table">
                         <thead>
@@ -37,6 +38,9 @@
                         </tbody>
                     </table>
                 </div>
+                @else
+                <p class="card-text text-muted">There is actually no datafile on the system, please upload datafile.</p>
+                @endif
                 
             </div>
         </div>
