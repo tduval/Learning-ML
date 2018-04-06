@@ -15,15 +15,50 @@
             Datasets
             </div>
             <div class="card-body">
-                <h5 class="card-title">Data Page</h5>
-                This is some text within a card body.
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th scope="col">File</th>
+                                <th scope="col">Size</th>
+                                <th scope="col">Description</th>
+                                <th scope="col">Created at</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        @foreach ($files as $file)
+                            <tr>
+                                <th scope="row">{{ $file->filename }}</th>
+                                <td>{{ ($file->filesize)/1000 }} KB</td>
+                                <td>{{ $file->filedescription }}</td>
+                                <td>{{ $file->created_at }}</td>
+                            </tr>
+                        @endforeach 
+                        </tbody>
+                    </table>
+                </div>
+                
             </div>
         </div>
     </div>
 
     <div class="col-4">
         <h2 class="text-primary">Upload new datafile</h2>
-        <div id="dropzone" class="dropzone"></div>
+        {{-- <div id="dropzone" class="dropzone">{{ csrf_field() }}</div> --}}
+        <form method="post" action="{{ url('/data-save') }}" class="dropzone" id="myDropzone" enctype="multipart/form-data">
+            {{ csrf_field() }}
+            <div class="dz-message">
+                <div class="col-xs-8">
+                    <div class="message">
+                        <p>XXXDrop files here or Click to Upload</p>
+                    </div>
+                </div>
+            </div>
+            <div class="fallback">
+                <input type="file" name="file" multiple>
+            </div>
+        </form>
+
     </div>
 </div>
 @stop
@@ -33,13 +68,11 @@
 <script type="text/javascript" src="{{ asset('js/dropzone.js') }}"></script>
 
 <script type="text/javascript">
-Dropzone.autoDiscover = false;
-jQuery(document).ready(function() {
-  $("#dropzone").dropzone({
-    url: "/file/post",
-    dictDefaultMessage: "Drop files here or<br>click to upload..."
-  });
-});
+Dropzone.options.myDropzone = {
+    uploadMultiple: true, //allow multiples files selection
+    parallelUploads: 2, // files processed at a time
+    maxFilesize: 16, //in MB
+};
 </script>
 @stop
 

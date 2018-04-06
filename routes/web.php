@@ -15,7 +15,8 @@ Route::get('/', function () {
 	    return view('dashboard');
 });
 
-Route::get('/data', function () {
-    return view('data');
-});
+
+Route::get('/data', 'UploadFilesController@index');
+Route::post('/data-save', 'UploadFilesController@store');
+Route::post('/data-delete', 'UploadFilesController@destroy');
 
