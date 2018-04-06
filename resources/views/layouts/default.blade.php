@@ -16,7 +16,7 @@
             @include('includes.sidebar')
 
             {{-- Include the content in the middle of the page --}}
-            <div class="content p-4">               
+            <div class="content p-4">
                 @yield('content')
             </div>
         </div>
