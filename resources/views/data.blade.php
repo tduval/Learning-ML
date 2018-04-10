@@ -24,6 +24,7 @@
                                 <th scope="col">Size</th>
                                 <th scope="col">Description</th>
                                 <th scope="col">Created at</th>
+                                <th scope="col"></th>
                             </tr>
                         </thead>
                         <tbody>
@@ -33,6 +34,11 @@
                                 <td>{{ ($file->filesize)/1000 }} KB</td>
                                 <td>{{ $file->filedescription }}</td>
                                 <td>{{ $file->created_at }}</td>
+                                <td><div class="d-inline-flex">
+                                    <a class="btn btn-info fas fa-file mr-2" href="{{ url($file->fileurl) }}" target="_blank" role="button"></a>
+                                    <form action="{{ url('/data-delete') }}" method="post">{{ csrf_field() }}<input type="hidden" name="id" value="{{ $file->id }}"><button type="submit" class="btn btn-danger fas fa-trash"></button></form>
+                                    </div>
+                                </td>
                             </tr>
                         @endforeach 
                         </tbody>

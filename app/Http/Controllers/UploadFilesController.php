@@ -54,7 +54,7 @@ class UploadFilesController extends Controller
             $filemimetype = $file->getClientMimeType();
             \Debugbar::info($filename . ' | ' . $filext . ' | ' . $filesize . ' | ' . $filemimetype);
             
-            $stor = Storage::disk('public')->put('UploadFiles', $file);
+            $stor = Storage::disk('public')->put('UploadFiles', $file, 'public');
             \Debugbar::info($stor);
             
             // Create the model UploadFiles and add the following into the DB Table
@@ -63,11 +63,12 @@ class UploadFilesController extends Controller
             $filemodel->filepath = $stor;
             $filemodel->filesize = $filesize;
             $filemodel->filedescription = "";
+            $filemodel->fileurl = Storage::url($stor);
             $filemodel->save();
         }
 
         //return Response::json(['message' => 'Image saved Successfully'], 200);
-        return back();
+        return redirect()->back()->withFlashSuccess("Datafile added!");
     }
 
     /**
@@ -112,8 +113,14 @@ class UploadFilesController extends Controller
      */
     public function destroy(Request $request)
     {
-
-
-        return back();
+        \Debugbar::info("$request->id");
+        $filemodel = UploadFiles::findOrFail($request->id);
+        \Debugbar::info($filemodel);
+        $filemodel->delete();
+        if(Storage::disk('public')->exists($filemodel->filepath)){
+            $stor = Storage::disk('public')->delete($filemodel->filepath);
+        }
+        \Debugbar::info($stor);
+        return redirect()->back()->withFlashSuccess("Datafile deleted!");
     }
 }

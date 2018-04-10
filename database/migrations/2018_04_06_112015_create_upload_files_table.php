@@ -19,6 +19,7 @@ class CreateUploadFilesTable extends Migration
             $table->text('filepath');
             $table->bigInteger('filesize');
             $table->text('filedescription');
+            $table->text('fileurl');
             $table->timestamps();
         });
     }
