@@ -47,36 +47,59 @@
     </div>
 
     <div class="col-4">
-        <h2 class="text-primary">Upload new datafile</h2>
-        {{-- <div id="dropzone" class="dropzone">{{ csrf_field() }}</div> --}}
-        <form method="post" action="{{ url('/data-save') }}" class="dropzone" id="myDropzone" enctype="multipart/form-data">
-            {{ csrf_field() }}
-            <div class="dz-message">
-                <div class="col-xs-8">
-                    <div class="message">
-                        <p>XXXDrop files here or Click to Upload</p>
+        <div class="card">
+            <div class="card-header">
+            Upload files
+            </div>
+            <div class="card-body">
+                <form action="{{ url('/data-save') }}" method="post" enctype="multipart/form-data">
+                    {{ csrf_field() }}
+                    <div class="input-group">
+                        <div class="custom-file">
+                            <input type="file" class="custom-file-input" name="file" id="customFile" multiple>
+                            <label class="custom-file-label text-truncate" for="customFile">Choose file</label>
+                        </div>
+                        <div class="input-group-append">
+                            <button type="submit" class="btn btn-primary" id="submitFileButton">Upload</button>
+                        </div>
                     </div>
-                </div>
+                </form>
             </div>
-            <div class="fallback">
-                <input type="file" name="file" multiple>
-            </div>
-        </form>
-
+        </div>
     </div>
 </div>
 @stop
 
 
 @section('scripts')
-<script type="text/javascript" src="{{ asset('js/dropzone.js') }}"></script>
-
 <script type="text/javascript">
-Dropzone.options.myDropzone = {
-    uploadMultiple: true, //allow multiples files selection
-    parallelUploads: 2, // files processed at a time
-    maxFilesize: 16, //in MB
-};
+$('#submitFileButton').hide();
+$('.custom-file-input').on('change', function() { 
+    var inputfiles = document.getElementById($(this).attr('id'));
+    var inputfileslength = inputfiles.files.length;
+    if (inputfileslength > 0){
+        var uploadfiles = [];
+        var uploadfilesname = [];
+        var uploadfilesize = [];
+        var uploadtotalsize = 0;
+        for(var x = 0;x< inputfileslength;x++){
+            uploadfiles.push(inputfiles.files[x]);
+            uploadfilesname.push(uploadfiles[x].name);
+            uploadfilesize.push(uploadfiles[x].size);
+            uploadtotalsize += uploadfiles[x].size;
+            if(uploadfilesize[x] > 16777216){ //if the file size is greater than 16 MB = 16777216
+                inputfiles.setCustomValidity('The file \"'+uploadfilesname[x]+'\" exceed the size limit (16MB).');
+            }else if (uploadtotalsize > 100000000){
+                inputfiles.setCustomValidity('The total size of files exceed the total size limit (100MB per batch).');
+            }else{
+                inputfiles.setCustomValidity('');
+            }
+        }
+        $(this).next('.custom-file-label').addClass("selected").html(uploadfilesname.join(", "));
+        $('#submitFileButton').show();
+    }
+});
+
 </script>
 @stop
 

@@ -66,8 +66,8 @@ class UploadFilesController extends Controller
             $filemodel->save();
         }
 
-        return Response::json(['message' => 'Image saved Successfully'], 200);
-
+        //return Response::json(['message' => 'Image saved Successfully'], 200);
+        return back();
     }
 
     /**
