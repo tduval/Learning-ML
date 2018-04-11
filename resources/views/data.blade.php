@@ -62,7 +62,7 @@
                     <div class="input-group mb-3">
                         <div class="custom-file">
                             <input type="file" class="custom-file-input" name="file" id="customFile" required>
-                            <label class="custom-file-label" for="customFile">Choose file</label>
+                            <label class="custom-file-label text-truncate" for="customFile">Choose file</label>
                         </div>
                         <div class="input-group-append">
                             <button type="submit" class="btn btn-primary" id="submitFileButton">Upload</button>
