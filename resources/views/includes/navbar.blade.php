@@ -7,7 +7,7 @@
                 <a class="nav-link" href="{{ url('/') }}">Dashboard</a>
             </li>
         </ul>
-
+        
         <ul class="navbar-nav ml-auto">
             <li class="nav-item">
                 <a class="nav-link p-2" href="https://github.com/tduval/Learning-ML" target="_blank"><i class="fab fa-fw fa-github"></i> </a>

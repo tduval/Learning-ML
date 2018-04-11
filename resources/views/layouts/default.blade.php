@@ -17,6 +17,7 @@
 
             {{-- Include the content in the middle of the page --}}
             <div class="content p-4">
+                @include('includes.messages')
                 @yield('content')
             </div>
         </div>
