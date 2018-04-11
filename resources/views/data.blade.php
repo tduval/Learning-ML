@@ -3,7 +3,6 @@
 @section('title', 'Data')
 
 @section('styles')
-<link href="{{ asset('/css/dropzone.css') }}" rel="stylesheet" type="text/css" />
 @stop
 
 @section('content')
@@ -45,7 +44,7 @@
                     </table>
                 </div>
                 @else
-                <p class="card-text text-muted">There is actually no datafile on the system, please upload datafile.</p>
+                <p class="card-text text-muted">There is no datafile on the system, please upload datafile.</p>
                 @endif
                 
             </div>
@@ -60,15 +59,16 @@
             <div class="card-body">
                 <form action="{{ url('/data-save') }}" method="post" enctype="multipart/form-data">
                     {{ csrf_field() }}
-                    <div class="input-group">
+                    <div class="input-group mb-3">
                         <div class="custom-file">
-                            <input type="file" class="custom-file-input" name="file" id="customFile" multiple>
-                            <label class="custom-file-label text-truncate" for="customFile">Choose file</label>
+                            <input type="file" class="custom-file-input" name="file" id="customFile" required>
+                            <label class="custom-file-label" for="customFile">Choose file</label>
                         </div>
                         <div class="input-group-append">
                             <button type="submit" class="btn btn-primary" id="submitFileButton">Upload</button>
                         </div>
                     </div>
+                    <input type="text" class="form-control" name="description" id="descriptionInput" placeholder="Enter a brief description of the file" maxlength="255">
                 </form>
             </div>
         </div>
@@ -79,33 +79,19 @@
 
 @section('scripts')
 <script type="text/javascript">
-$('#submitFileButton').hide();
+$('#submitFileButton').hide(); //Hide the Upload button if no file is selected to upload - avoid empty upload
 $('.custom-file-input').on('change', function() { 
-    var inputfiles = document.getElementById($(this).attr('id'));
-    var inputfileslength = inputfiles.files.length;
-    if (inputfileslength > 0){
-        var uploadfiles = [];
-        var uploadfilesname = [];
-        var uploadfilesize = [];
-        var uploadtotalsize = 0;
-        for(var x = 0;x< inputfileslength;x++){
-            uploadfiles.push(inputfiles.files[x]);
-            uploadfilesname.push(uploadfiles[x].name);
-            uploadfilesize.push(uploadfiles[x].size);
-            uploadtotalsize += uploadfiles[x].size;
-            if(uploadfilesize[x] > 16777216){ //if the file size is greater than 16 MB = 16777216
-                inputfiles.setCustomValidity('The file \"'+uploadfilesname[x]+'\" exceed the size limit (16MB).');
-            }else if (uploadtotalsize > 100000000){
-                inputfiles.setCustomValidity('The total size of files exceed the total size limit (100MB per batch).');
-            }else{
-                inputfiles.setCustomValidity('');
-            }
+    var inputfiles = document.getElementById($(this).attr('id')); //retrieve the DOM component with vanilla javascript as jQuery do not support this features
+    if (inputfiles.files.length > 0){
+        if(inputfiles.files[0].size > 8388608){ //if the file size is greater than 8 MB (PHP.ini Defasult limit size for POST request)
+            inputfiles.setCustomValidity('The file exceed the size limit (8 MB).');
+        }else{
+            inputfiles.setCustomValidity('');
         }
-        $(this).next('.custom-file-label').addClass("selected").html(uploadfilesname.join(", "));
-        $('#submitFileButton').show();
+        $(this).next('.custom-file-label').addClass("selected").html(inputfiles.files[0].name); //display the filename into the file input label
+        $('#submitFileButton').show(); //restore the Upload button when a valid selected file is present
     }
 });
-
 </script>
 @stop
 
