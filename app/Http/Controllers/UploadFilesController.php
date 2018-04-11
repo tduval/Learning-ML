@@ -40,37 +40,28 @@ class UploadFilesController extends Controller
      */
     public function store(Request $request)
     {
-        \Debugbar::debug($request);
-        $files = $request->file('file');
-        \Debugbar::info($files);
-        if (!is_array($files)) {
-            \Debugbar::info("entering the arrays condidition");
-            $files = [$files];
-        }
-        \Debugbar::warning($files);
-        for ($i = 0; $i < count($files); $i++) {
-            $file = $files[$i];
-            \Debugbar::info($file);
-            $filename = $file->getClientOriginalName();
-            $filext = $file->getClientOriginalExtension();
-            $filesize = $file->getClientSize();
-            $filemimetype = $file->getClientMimeType();
-            \Debugbar::info($filename . ' | ' . $filext . ' | ' . $filesize . ' | ' . $filemimetype);
-            
-            $stor = Storage::disk('public')->put('UploadFiles', $file, 'public');
-            \Debugbar::info($stor);
-            
-            // Create the model UploadFiles and add the following into the DB Table
-            $filemodel = new UploadFiles();
-            $filemodel->filename = $filename;
-            $filemodel->filepath = $stor;
-            $filemodel->filesize = $filesize;
-            $filemodel->filedescription = "";
-            $filemodel->fileurl = Storage::url($stor);
-            $filemodel->save();
-        }
+        $request->validate([
+                'file' => 'required|file|max:8192', //8192 KB
+                'description' => 'max:255',
+        ]);
 
-        //return Response::json(['message' => 'Image saved Successfully'], 200);
+        $file = $request->file('file');
+        $filename = $file->getClientOriginalName();
+        $filext = $file->getClientOriginalExtension();
+        $filesize = $file->getClientSize();
+        $filedescr = $request->description;
+            
+        $stor = Storage::disk('public')->put('UploadFiles', $file, 'public');
+        
+        // Create the model UploadFiles and add the following into the DB Table
+        $filemodel = new UploadFiles();
+        $filemodel->filename = $filename;
+        $filemodel->filepath = $stor;
+        $filemodel->filesize = $filesize;
+        $filemodel->filedescription = "".$filedescr;
+        $filemodel->fileurl = Storage::url($stor);
+        $filemodel->save();
+
         return redirect()->back()->withFlashSuccess("Datafile added!");
     }
 
@@ -116,14 +107,11 @@ class UploadFilesController extends Controller
      */
     public function destroy(Request $request)
     {
-        \Debugbar::info("$request->id");
         $filemodel = UploadFiles::findOrFail($request->id);
-        \Debugbar::info($filemodel);
         $filemodel->delete();
         if(Storage::disk('public')->exists($filemodel->filepath)){
             $stor = Storage::disk('public')->delete($filemodel->filepath);
         }
-        \Debugbar::info($stor);
         return redirect()->back()->withFlashSuccess("Datafile deleted!");
     }
 }
