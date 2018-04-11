@@ -40,11 +40,14 @@ class UploadFilesController extends Controller
      */
     public function store(Request $request)
     {
+        \Debugbar::debug($request);
         $files = $request->file('file');
+        \Debugbar::info($files);
         if (!is_array($files)) {
+            \Debugbar::info("entering the arrays condidition");
             $files = [$files];
         }
-
+        \Debugbar::warning($files);
         for ($i = 0; $i < count($files); $i++) {
             $file = $files[$i];
             \Debugbar::info($file);
