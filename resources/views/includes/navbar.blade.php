@@ -1,4 +1,4 @@
-<nav class="navbar navbar-expand navbar-dark bg-dark">
+<nav class="navbar sticky-top navbar-expand navbar-dark bg-dark">
     <a class="sidebar-toggle text-light mr-3"><i class="fas fa-fw fa-bars"></i></a>
     <span class="navbar-brand mb-0 h1">Navbar</span>
     <div class="collapse navbar-collapse">
