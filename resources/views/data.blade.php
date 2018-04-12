@@ -7,14 +7,15 @@
 
 @section('content')
 
-<div class="row">
+
+<div class="row mb-4">
     <div class="col-8">
         <div class="card">
             <div class="card-header">
             Datasets
             </div>
             <div class="card-body">
-                @if ($files->count())
+                @if (isset($files) && count($files) >0) 
                 <div class="table-responsive">
                     <table class="table">
                         <thead>
@@ -34,7 +35,8 @@
                                 <td>{{ $file->filedescription }}</td>
                                 <td>{{ $file->created_at }}</td>
                                 <td><div class="d-inline-flex">
-                                    <a class="btn btn-info fas fa-file mr-2" href="{{ url($file->fileurl) }}" target="_blank" role="button"></a>
+                                    <form action="{{ url('/data-show') }}" method="post">{{csrf_field()}}<input type="hidden" name="id" value="{{ $file->id }}"><button type="submit" class="btn btn-primary fas fa-eye mr-2"></button></form>
+                                    <a class="btn btn-info fas fa-file-archive mr-2" href="{{ url($file->fileurl) }}" target="_blank" role="button"></a>
                                     <form action="{{ url('/data-delete') }}" method="post">{{csrf_field()}}<input type="hidden" name="id" value="{{ $file->id }}"><button type="submit" class="btn btn-danger fas fa-trash"></button></form>
                                     </div>
                                 </td>
@@ -46,7 +48,7 @@
                 @else
                 <p class="card-text text-muted">There is no datafile on the system, please upload datafile.</p>
                 @endif
-                
+
             </div>
         </div>
     </div>
@@ -72,6 +74,41 @@
                 </form>
             </div>
         </div>
+    </div>
+</div>
+
+
+<div class="row mb-4">
+    <div class="col">
+    <div class="card">
+        <div class="card-header">
+        Data extract of '@if (isset($filename)) {{$filename}}@endif' (first 25 rows)
+        </div>
+        <div class="card-body">
+            @if (isset($data) && isset($header))
+            <div class="table-responsive">
+                <table class="table table-sm">
+                    <thead class="thead-light">
+                        <tr>
+                            @foreach ($header as $th)
+                            <th scope="col">{{ $th }}</th>
+                            @endforeach
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach ($data as $row)
+                        <tr>
+                            @foreach ($row as $cell)
+                            <td>{{ $cell }}</td>
+                            @endforeach
+                        </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
+            @endif
+        </div>
+    </div>
     </div>
 </div>
 @stop

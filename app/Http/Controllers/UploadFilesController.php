@@ -6,6 +6,8 @@ use App\UploadFiles;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Storage;
+use League\Csv\Reader;
+use League\Csv\Statement;
 
 class UploadFilesController extends Controller
 {
@@ -62,7 +64,7 @@ class UploadFilesController extends Controller
         $filemodel->fileurl = Storage::url($stor);
         $filemodel->save();
 
-        return redirect()->back()->withFlashSuccess("Datafile added!");
+        return redirect()->back()->withFlashSuccess("File ".$filename." successfully uploaded.");
     }
 
     /**
@@ -71,9 +73,27 @@ class UploadFilesController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Request $request)
     {
-        //
+        $filemodel = UploadFiles::findOrFail($request->id);
+        $filepath = $filemodel->filepath;
+        $fileurl = $filemodel->fileurl;
+        $filename = $filemodel->filename;
+
+        $csv = Reader::createFromPath('/var/www/laravel-vanilla/public/storage/'.$filepath, 'r');
+        $csv->setHeaderOffset(0);
+        $header = $csv->getHeader(); //get the header row of the csv file
+        \Debugbar::info($header);
+        $stmt = (new Statement())->limit(25); //get the first 25 rows
+
+        $data = array();
+        $records = $stmt->process($csv);
+        foreach ($records as $record) {
+            array_push($data, $record);
+        }
+        
+        \Debugbar::info($data);
+        return view('data', compact('data', 'header', 'filename'));
     }
 
     /**
@@ -108,10 +128,11 @@ class UploadFilesController extends Controller
     public function destroy(Request $request)
     {
         $filemodel = UploadFiles::findOrFail($request->id);
+        $filename = $filemodel->filename;
         $filemodel->delete();
         if(Storage::disk('public')->exists($filemodel->filepath)){
             $stor = Storage::disk('public')->delete($filemodel->filepath);
         }
-        return redirect()->back()->withFlashSuccess("Datafile deleted!");
+        return redirect()->back()->withFlashSuccess("File ".$filename." successfully deleted.");
     }
 }
