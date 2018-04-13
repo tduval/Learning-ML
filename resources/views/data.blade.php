@@ -3,6 +3,7 @@
 @section('title', 'Data')
 
 @section('styles')
+<link href="{{ asset('/css/datatables.min.css') }}" rel="stylesheet" type="text/css" />
 @stop
 
 @section('content')
@@ -20,11 +21,12 @@
                     <table class="table">
                         <thead>
                             <tr>
-                                <th scope="col">File</th>
-                                <th scope="col">Size</th>
-                                <th scope="col">Description</th>
-                                <th scope="col">Created at</th>
-                                <th scope="col"></th>
+                                {{--<th scope="col">File</th>--}}
+                                <th>File</th>
+                                <th>Size</th>
+                                <th>Description</th>
+                                <th>Created at</th>
+                                <th></th>
                             </tr>
                         </thead>
                         <tbody>
@@ -115,7 +117,14 @@
 
 
 @section('scripts')
+<script type="text/javascript" src="{{ asset('js/datatables.min.js') }}"></script>
+
+
 <script type="text/javascript">
+$(document).ready(function() {
+    $('.table').DataTable();
+});
+
 $('#submitFileButton').hide(); //Hide the Upload button if no file is selected to upload - avoid empty upload
 $('.custom-file-input').on('change', function() { 
     var inputfiles = document.getElementById($(this).attr('id')); //retrieve the DOM component with vanilla javascript as jQuery do not support this features
