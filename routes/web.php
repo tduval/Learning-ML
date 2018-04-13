@@ -20,4 +20,4 @@ Route::get('/data', 'UploadFilesController@index');
 Route::post('/data-save', 'UploadFilesController@store');
 Route::post('/data-delete', 'UploadFilesController@destroy');
 
-Route::post('/data-show', 'UploadFilesController@show');
+Route::get('/data/{id}/show', 'UploadFilesController@show');

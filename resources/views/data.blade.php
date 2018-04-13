@@ -35,7 +35,8 @@
                                 <td>{{ $file->filedescription }}</td>
                                 <td>{{ $file->created_at }}</td>
                                 <td><div class="d-inline-flex">
-                                    <form action="{{ url('/data-show') }}" method="post">{{csrf_field()}}<input type="hidden" name="id" value="{{ $file->id }}"><button type="submit" class="btn btn-primary fas fa-eye mr-2"></button></form>
+                                    <button class="btn-show-file btn btn-dark mr-2 fas fa-eye" data-id="{{ $file->id }}"> Show</button>
+                                    {{--<a class="btn btn-primary fas fa-eye mr-2" href="{{ url('/data/'.$file->id.'/show') }}" target="_blank" role="button"></a>--}}
                                     <a class="btn btn-info fas fa-file-archive mr-2" href="{{ url($file->fileurl) }}" target="_blank" role="button"></a>
                                     <form action="{{ url('/data-delete') }}" method="post">{{csrf_field()}}<input type="hidden" name="id" value="{{ $file->id }}"><button type="submit" class="btn btn-danger fas fa-trash"></button></form>
                                     </div>
@@ -77,15 +78,14 @@
     </div>
 </div>
 
-
+@if (isset($data) && isset($header) && isset($filename))
 <div class="row mb-4">
     <div class="col">
     <div class="card">
         <div class="card-header">
-        Data extract of '@if (isset($filename)) {{$filename}}@endif' (first 25 rows)
+        Data extract of '{{ $filename }} (first 25 rows)
         </div>
         <div class="card-body">
-            @if (isset($data) && isset($header))
             <div class="table-responsive">
                 <table class="table table-sm">
                     <thead class="thead-light">
@@ -106,11 +106,11 @@
                     </tbody>
                 </table>
             </div>
-            @endif
         </div>
     </div>
     </div>
 </div>
+@endif
 @stop
 
 
@@ -129,6 +129,25 @@ $('.custom-file-input').on('change', function() {
         $('#submitFileButton').show(); //restore the Upload button when a valid selected file is present
     }
 });
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function() {
+
+    $('.btn-show-file').click(function(e){
+        var id = $(this).data("id");
+        var urldatashow = "/data/"+id+"/show";
+        $.ajax({
+                url: urldatashow,
+                method: "GET",
+                dataType: "json",
+                success:function(response){
+                    alert(response);
+                }})
+    })
+});
+
 </script>
 @stop
 

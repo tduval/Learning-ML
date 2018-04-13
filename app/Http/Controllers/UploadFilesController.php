@@ -73,9 +73,10 @@ class UploadFilesController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show(Request $request)
+    public function show($id)
     {
-        $filemodel = UploadFiles::findOrFail($request->id);
+        \Debugbar::info($id);
+        $filemodel = UploadFiles::findOrFail($id);
         $filepath = $filemodel->filepath;
         $fileurl = $filemodel->fileurl;
         $filename = $filemodel->filename;
@@ -83,7 +84,7 @@ class UploadFilesController extends Controller
         $csv = Reader::createFromPath('/var/www/laravel-vanilla/public/storage/'.$filepath, 'r');
         $csv->setHeaderOffset(0);
         $header = $csv->getHeader(); //get the header row of the csv file
-        \Debugbar::info($header);
+        //\Debugbar::info($header);
         $stmt = (new Statement())->limit(25); //get the first 25 rows
 
         $data = array();
@@ -92,8 +93,15 @@ class UploadFilesController extends Controller
             array_push($data, $record);
         }
         
-        \Debugbar::info($data);
-        return view('data', compact('data', 'header', 'filename'));
+        //\Debugbar::info($data);
+        //return view('data', compact('data', 'header', 'filename'));
+        return Response::json(array(
+                        'data' => $data,
+                        'header' => $header,
+                        'filename' => $filename),
+                        200
+                        );
+        //return redirect()->back()->with(compact('data', 'header', 'filename'));
     }
 
     /**
