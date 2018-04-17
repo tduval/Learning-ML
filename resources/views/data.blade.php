@@ -18,7 +18,7 @@
             <div class="card-body">
                 @if (isset($files) && count($files) >0) 
                 <div class="table-responsive">
-                    <table class="table">
+                    <table class="table" id="table-index-file">
                         <thead>
                             <tr>
                                 {{--<th scope="col">File</th>--}}
@@ -80,31 +80,21 @@
     </div>
 </div>
 
-@if (isset($data) && isset($header) && isset($filename))
-<div class="row mb-4">
+<div class="row mb-4" id="div-data-show">
     <div class="col">
     <div class="card">
         <div class="card-header">
-        Data extract of '{{ $filename }} (first 25 rows)
+        Data extract (first 25 rows)
         </div>
         <div class="card-body">
+            <p>This table displays a brief extract of the selected datafile.</p>
             <div class="table-responsive">
-                <table class="table table-sm">
-                    <thead class="thead-light">
-                        <tr>
-                            @foreach ($header as $th)
-                            <th scope="col">{{ $th }}</th>
-                            @endforeach
-                        </tr>
+                <table class="table table-sm" id="table-data-show">
+                    <thead>
+                        <tr><th></th></tr>
                     </thead>
                     <tbody>
-                        @foreach ($data as $row)
-                        <tr>
-                            @foreach ($row as $cell)
-                            <td>{{ $cell }}</td>
-                            @endforeach
-                        </tr>
-                        @endforeach
+                        <tr><td></td></tr>
                     </tbody>
                 </table>
             </div>
@@ -112,7 +102,6 @@
     </div>
     </div>
 </div>
-@endif
 @stop
 
 
@@ -122,39 +111,64 @@
 
 <script type="text/javascript">
 $(document).ready(function() {
-    $('.table').DataTable();
-});
-
-$('#submitFileButton').hide(); //Hide the Upload button if no file is selected to upload - avoid empty upload
-$('.custom-file-input').on('change', function() { 
-    var inputfiles = document.getElementById($(this).attr('id')); //retrieve the DOM component with vanilla javascript as jQuery do not support this features
-    if (inputfiles.files.length > 0){
-        if(inputfiles.files[0].size > 8388608){ //if the file size is greater than 8 MB (PHP.ini Defasult limit size for POST request)
-            inputfiles.setCustomValidity('The file exceed the size limit (8 MB).');
-        }else{
-            inputfiles.setCustomValidity('');
-        }
-        $(this).next('.custom-file-label').addClass("selected").html(inputfiles.files[0].name); //display the filename into the file input label
-        $('#submitFileButton').show(); //restore the Upload button when a valid selected file is present
-    }
-});
-</script>
-
-
-<script type="text/javascript">
-$(document).ready(function() {
+    $("#div-data-show").hide();
+    $('#submitFileButton').hide();//Hide the Upload button if no file is selected to upload - avoid empty upload
+    
 
     $('.btn-show-file').click(function(e){
         var id = $(this).data("id");
         var urldatashow = "/data/"+id+"/show";
+        $("#div-data-show").show();
+        $('#table-data-show').DataTable();
+
         $.ajax({
-                url: urldatashow,
-                method: "GET",
-                dataType: "json",
-                success:function(response){
-                    alert(response);
-                }})
-    })
+            url: urldatashow,
+            method: "GET",
+            success:function(response){
+                $('#table-data-show').DataTable().destroy();
+                var tableHeaders = "";
+                $.each(response.header, function(i, val){
+                    tableHeaders += "<th>" + val + "</th>";
+                });
+                $('#table-data-show').empty();
+                $("#table-data-show").append('<thead><tr>' + tableHeaders + '</tr></thead>');
+
+                var tableDatas = "";
+                $.each(response.data, function(i, valr){
+                    tableDatas += "<tr>";
+                    $.each(response.data[i], function(j, valc){
+                        tableDatas += "<td>" + valc + "</td>";
+                    });
+                    tableDatas += "</tr>";
+                });
+                $("#table-data-show").append('<tbody>' + tableDatas + '</tbody>');
+
+                $('#table-data-show').DataTable();
+            }
+        });
+
+    });
+
+    /////////////////////////////////////////////
+    /////////////////////////////////////////////
+    // File Input forn customization ////////////
+    /////////////////////////////////////////////
+    /////////////////////////////////////////////
+    $('.custom-file-input').on('change', function() {
+        var inputfiles = document.getElementById($(this).attr('id')); //retrieve the DOM component with vanilla javascript as jQuery do not support this features
+        if (inputfiles.files.length > 0){
+            if(inputfiles.files[0].size > 8388608){ //if the file size is greater than 8 MB (PHP.ini Defasult limit size for POST request)
+                inputfiles.setCustomValidity('The file exceed the size limit (8 MB).');
+            }else{
+                inputfiles.setCustomValidity('');
+            }
+            $(this).next('.custom-file-label').addClass("selected").html(inputfiles.files[0].name); //display the filename into the file input label
+            $('#submitFileButton').show(); //restore the Upload button when a valid selected file is present
+        }
+    });
+
+
+
 });
 
 </script>

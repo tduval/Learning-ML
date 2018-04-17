@@ -75,7 +75,7 @@ class UploadFilesController extends Controller
      */
     public function show($id)
     {
-        \Debugbar::info($id);
+        //\Debugbar::info($id);
         $filemodel = UploadFiles::findOrFail($id);
         $filepath = $filemodel->filepath;
         $fileurl = $filemodel->fileurl;
@@ -95,10 +95,10 @@ class UploadFilesController extends Controller
         
         //\Debugbar::info($data);
         //return view('data', compact('data', 'header', 'filename'));
-        return Response::json(array(
+        return Response::json([
                         'data' => $data,
                         'header' => $header,
-                        'filename' => $filename),
+                        'filename' => $filename],
                         200
                         );
         //return redirect()->back()->with(compact('data', 'header', 'filename'));
