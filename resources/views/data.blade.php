@@ -38,7 +38,6 @@
                                 <td>{{ $file->created_at }}</td>
                                 <td><div class="d-inline-flex">
                                     <button class="btn-show-file btn btn-dark mr-2 fas fa-eye" data-id="{{ $file->id }}"> Show</button>
-                                    {{--<a class="btn btn-primary fas fa-eye mr-2" href="{{ url('/data/'.$file->id.'/show') }}" target="_blank" role="button"></a>--}}
                                     <a class="btn btn-info fas fa-file-archive mr-2" href="{{ url($file->fileurl) }}" target="_blank" role="button"></a>
                                     <form action="{{ url('/data-delete') }}" method="post">{{csrf_field()}}<input type="hidden" name="id" value="{{ $file->id }}"><button type="submit" class="btn btn-danger fas fa-trash"></button></form>
                                     </div>
@@ -117,7 +116,7 @@ $(document).ready(function() {
 
     $('.btn-show-file').click(function(e){
         var id = $(this).data("id");
-        var urldatashow = "/data/"+id+"/show";
+        var urldatashow = "/data/"+id;
         $("#div-data-show").show();
         $('#table-data-show').DataTable();
 
