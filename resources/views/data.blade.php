@@ -61,7 +61,7 @@
             Upload files
             </div>
             <div class="card-body">
-                <form action="{{ url('/data-save') }}" method="post" enctype="multipart/form-data">
+                <form action="{{ url('/data') }}" method="post" enctype="multipart/form-data">
                     {{ csrf_field() }}
                     <div class="input-group mb-3">
                         <div class="custom-file">
