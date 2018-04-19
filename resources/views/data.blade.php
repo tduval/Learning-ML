@@ -115,15 +115,13 @@ $(document).ready(function() {
     $("#div-data-show").hide();
     $('#submitFileButton').hide();//Hide the Upload button if no file is selected to upload - avoid empty upload
     
-
     $('.btn-show-file').click(function(e){
         var id = $(this).data("id");
-        var urldata = "/data/"+id;
         $("#div-data-show").show();
         $('#table-data-show').DataTable();
 
         $.ajax({
-            url: urldata,
+            url: "/data/"+id,
             method: "GET",
             success:function(response){
                 $('#table-data-show').DataTable().destroy();
@@ -152,16 +150,15 @@ $(document).ready(function() {
 
     $('.btn-delete-file').click(function(e){
         var id = $(this).data("id");
-        var urldata = "/data/"+id;
-        //alert("click");
+        var row = $(this).closest('tr');
         $.ajax({
-            url: urldata,
+            url: "/data/"+id,
             method: "DELETE",
             data: { _token: '{{csrf_token()}}' },
             success:function(response){
                 // deletion successfull
                 console.log("Hourra");
-                location.reload(); 
+                row.remove();
             },
             error:function(response){
                 console.log("fuck : "+response);
@@ -170,9 +167,7 @@ $(document).ready(function() {
     });
 
     /////////////////////////////////////////////
-    /////////////////////////////////////////////
     // File Input forn customization ////////////
-    /////////////////////////////////////////////
     /////////////////////////////////////////////
     $('.custom-file-input').on('change', function() {
         var inputfiles = document.getElementById($(this).attr('id')); //retrieve the DOM component with vanilla javascript as jQuery do not support this features

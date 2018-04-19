@@ -141,7 +141,7 @@ class UploadFilesController extends Controller
         if(Storage::disk('public')->exists($filemodel->filepath)){
             $stor = Storage::disk('public')->delete($filemodel->filepath);
         }
-        return Response::json("deleted ok qwertgyuh",200);
+        return Response::json("The file has been successfully deleted.",200);
         //return redirect()->back()->withFlashSuccess("File ".$filename." successfully deleted.");
     }
 }
