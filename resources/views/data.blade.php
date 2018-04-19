@@ -39,7 +39,9 @@
                                 <td><div class="d-inline-flex">
                                     <button class="btn-show-file btn btn-dark mr-2 fas fa-eye" data-id="{{ $file->id }}"> Show</button>
                                     <a class="btn btn-info fas fa-file-archive mr-2" href="{{ url($file->fileurl) }}" target="_blank" role="button"></a>
-                                    <form action="{{ url('/data-delete') }}" method="post">{{csrf_field()}}<input type="hidden" name="id" value="{{ $file->id }}"><button type="submit" class="btn btn-danger fas fa-trash"></button></form>
+                                    <button class="btn-delete-file btn btn-danger fas fa-trash" data-id="{{ $file->id }}"> Delete</button>
+                                    {{--<a class="btn btn-danger fas fa-trash" href="{{ url('/data/'.$file->id) }}" role="button"></a>    
+                                    <form action="{{ url('/data-delete') }}" method="post">{{csrf_field()}}<input type="hidden" name="id" value="{{ $file->id }}"><button type="submit" class="btn btn-danger fas fa-trash"></button></form>--}}
                                     </div>
                                 </td>
                             </tr>
@@ -116,12 +118,12 @@ $(document).ready(function() {
 
     $('.btn-show-file').click(function(e){
         var id = $(this).data("id");
-        var urldatashow = "/data/"+id;
+        var urldata = "/data/"+id;
         $("#div-data-show").show();
         $('#table-data-show').DataTable();
 
         $.ajax({
-            url: urldatashow,
+            url: urldata,
             method: "GET",
             success:function(response){
                 $('#table-data-show').DataTable().destroy();
@@ -146,6 +148,25 @@ $(document).ready(function() {
             }
         });
 
+    });
+
+    $('.btn-delete-file').click(function(e){
+        var id = $(this).data("id");
+        var urldata = "/data/"+id;
+        //alert("click");
+        $.ajax({
+            url: urldata,
+            method: "DELETE",
+            data: { _token: '{{csrf_token()}}' },
+            success:function(response){
+                // deletion successfull
+                console.log("Hourra");
+                location.reload(); 
+            },
+            error:function(response){
+                console.log("fuck : "+response);
+            }
+        });
     });
 
     /////////////////////////////////////////////

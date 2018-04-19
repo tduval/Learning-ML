@@ -18,7 +18,7 @@ Route::get('/', function () {
 
 Route::get('/data', 'UploadFilesController@index');
 Route::post('/data-save', 'UploadFilesController@store');
-Route::post('/data-delete', 'UploadFilesController@destroy');
+Route::delete('/data/{id}', 'UploadFilesController@destroy');
 Route::get('/data/{id}', 'UploadFilesController@show');
 
 

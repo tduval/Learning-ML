@@ -133,14 +133,15 @@ class UploadFilesController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Request $request)
+    public function destroy($id)
     {
-        $filemodel = UploadFiles::findOrFail($request->id);
+        $filemodel = UploadFiles::findOrFail($id);
         $filename = $filemodel->filename;
         $filemodel->delete();
         if(Storage::disk('public')->exists($filemodel->filepath)){
             $stor = Storage::disk('public')->delete($filemodel->filepath);
         }
-        return redirect()->back()->withFlashSuccess("File ".$filename." successfully deleted.");
+        return Response::json("deleted ok qwertgyuh",200);
+        //return redirect()->back()->withFlashSuccess("File ".$filename." successfully deleted.");
     }
 }
