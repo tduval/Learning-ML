@@ -109,9 +109,10 @@
 
 
 <script type="text/javascript">
+$("#div-data-show").hide(); //Hide the card with the data extract at the start of the page since no datatable are selected
+$('#submitFileButton').hide();//Hide the Upload button if no file is selected to upload - avoid empty upload
+
 $(document).ready(function() {
-    $("#div-data-show").hide();
-    $('#submitFileButton').hide();//Hide the Upload button if no file is selected to upload - avoid empty upload
     
     $('.btn-show-file').click(function(e){
         var id = $(this).data("id");
