@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\UploadFiles;
 
 class LinearRegressionController extends Controller
 {
@@ -13,7 +14,8 @@ class LinearRegressionController extends Controller
      */
     public function index()
     {
-        return view('regression.linear'); 
+        $files = UploadFiles::all();
+        return view('regression.linear', compact('files')); 
     }
 
     /**
