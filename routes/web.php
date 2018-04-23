@@ -23,4 +23,5 @@ Route::get('/data/{id}', 'UploadFilesController@show');
 
 
 Route::get('/regression/linear', 'LinearRegressionController@index');
+Route::post('/regression/linear', 'LinearRegressionController@store');
 

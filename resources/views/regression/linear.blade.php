@@ -46,7 +46,7 @@
 
             <div class="col">
             <div class="form-group">
-                <label for="RL-dataset-trainfold-range">Select the percentage of dataset that will be use for Training model (over Testing)</label>
+                <label for="RL-dataset-trainfold-range">Select the percentage of dataset that will be use as the training group (over test group)</label>
                 <div class="form-row">
                     <div class="col-1"><span class="bg-info text-white text-center" id="RL-dataset-trainfold-range-value"> 70% </span></div>
                     <div class="col">
@@ -56,6 +56,21 @@
                 </div>
             </div>
             </div>
+            
+            <div class="col-3">       
+            <div class="form-group">
+                <label for="RL-dataset-split">Select the type of Cross-Validtion split method:</label>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" id="RL-dataset-split-stratified" name="RL-dataset-split-radios" value="stratified" checked>
+                    <label class="form-check-label" for="RL-dataset-split-stratified">Stratified Random Split</label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" id="RL-dataset-split-random" name="RL-dataset-split-radios" value="random">
+                    <label class="form-check-label" for="RL-dataset-split-random">Random Split</label>
+                </div>
+            </div>
+            </div>
+
             </div>
             @else
 
@@ -76,16 +91,26 @@
 
 $(document).ready(function() {
     $('#RL-dataset-trainfold-range').change(function(e){
-        console.log($(this).val());
         $('#RL-dataset-trainfold-range-value').text($(this).val()+"%");
     });
 
 
     $('#RL-dataset-confirm-btn').click(function(e){
-        var file = $('#RL-dataset-select');
-        console.log("Select : "+file.val());
-        let trainfold = $('#RL-dataset-trainfold-range-value').val();
-        console.log("Training set : ", trainfold );
+        var fileid = $('#RL-dataset-select').val();
+        var trainfoldvalue = $('#RL-dataset-trainfold-range').val();
+        var splitmethod = $('input[name=RL-dataset-split-radios]:checked').val();
+        $.ajax({
+            url: "/regression/linear/",
+            method: "POST",
+            data: { _token: '{{csrf_token()}}' , fileid: fileid, trainfoldvalue: trainfoldvalue, splitmethod: splitmethod},
+            success:function(response){
+                console.log("Hourra : ",response);
+            },
+            error:function(response){
+                console.log("fuck : ",response);
+            }
+        });
+
     });
     
 
