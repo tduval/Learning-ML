@@ -1,4 +1,8 @@
 ## About LML
+PHP Laravel-based frontend used to learn Machine Learning with help of the PHP-AI/PHP-ML library
+
+## Screenshot
+
 
 
 ## Made from
