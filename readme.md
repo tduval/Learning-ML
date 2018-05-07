@@ -3,7 +3,9 @@ PHP Laravel-based frontend used to learn Machine Learning with help of the PHP-A
 
 ## Screenshot
 
+![Alt text](https://raw.githubusercontent.com/tduval/Learning-ML/master/LML%20-%20Data%20index.png "Dataset view")
 
+![Alt text](https://raw.githubusercontent.com/tduval/Learning-ML/master/LML%20-%20Linear%20Regression.png "Linear Regression Parameter View")
 
 ## Made from
 
